@@ -1,6 +1,11 @@
 This code is intended to be used with the open source ILS Koha. 
 
-The following piece of code should be inserted into the "opacuserjs" system preference. 
+* INSTALLATION
+
+1. Rename the file config-dist.php to config.php prior to use: 
+mv config-dist.php config.php
+
+2. The following piece of code should be inserted into the "opacuserjs" system preference. 
 
 "/~magnus/mashin/mashin.php" should be changed to point to the actual location of the script mashin.php on your server.  
 
@@ -16,5 +21,7 @@ jQuery(document).ready(function () {
 });
 
 ----------------------------8<---------------------------
+
+* CUSTOMIZATION
 
 See config.php for further customizations. 
