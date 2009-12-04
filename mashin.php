@@ -51,7 +51,7 @@ if (!empty($_GET['id'])) {
 	$sru_url .= "&recordSchema=$recordSchema";
 	$sru_url .= "&startRecord=$startRecord";
 	$sru_url .= "&maximumRecords=$maximumRecords";
-
+	
 	// Fetch the SRU data
 	$sru_data = file_get_contents($sru_url) or exit("SRU error");
 	
@@ -78,7 +78,7 @@ if (!empty($_GET['id'])) {
 		} elseif ($record->getField("110") && $record->getField("110")->getSubfield("a")) {
 			$artist = marctrim($record->getField("110")->getSubfield("a"));
 		} elseif ($record->getField("700") && $record->getField("700")->getSubfield("a")) {
-			$artist = marctrim($record->getField("700")->getSubfield("a"));
+			$artist = deinvert(marctrim($record->getField("700")->getSubfield("a")));
 		} elseif ($record->getField("710") && $record->getField("710")->getSubfield("a")) {
 			$artist = marctrim($record->getField("710")->getSubfield("a"));
 		}
@@ -145,7 +145,7 @@ if (!empty($_GET['id'])) {
 			}
 			// Description
 			if ($album['album']['wiki']['summary']) {
-				$out .= '<p>' . lastfm_lenker($album['album']['wiki']['summary'])  . '</p>';
+				$out .= '<p>' . remove_lastfm_links($album['album']['wiki']['summary'])  . '</p>';
 			}
 			// Link to Last.fm
 			$out .= '<p class="les-mer"><a href="' . $album['album']['url'] . '">Les mer hos Last.fm</a></p>';
