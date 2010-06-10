@@ -69,6 +69,45 @@ if (!empty($_GET['id'])) {
 	$out = '';
 	// Decide what to do based on the contents of the MARC record
 	
+	// Journals
+	// Fetch TOC (most recent articles) by way of Journal TOCs
+	// http://www.journaltocs.hw.ac.uk/index.php?action=api
+	
+	if ($record->getField("022") && $record->getField("022")->getSubfield("a")) {
+	
+	  $issn = marctrim($record->getField("022")->getSubfield("a"));
+	  if ($issn) {
+	    
+	    $url = 'http://www.journaltocs.hw.ac.uk/api/journals/' . $issn . '?output=articles';
+	    $xml = simplexml_load_file($url);
+
+	    $xml->registerXPathNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"); 
+	    $xml->registerXPathNamespace("prism", "http://prismstandard.org/namespaces/1.2/basic/"); 
+	    $xml->registerXPathNamespace("dc", "http://purl.org/dc/elements/1.1/");
+	    $xml->registerXPathNamespace("mn", "http://usefulinc.com/rss/manifest/");
+	    $xml->registerXPathNamespace("content", "http://purl.org/rss/1.0/modules/content/");
+
+	    echo('<div id="mashin" style="background-color: #F3F3F3; padding: 3px 3px 0.5em 1em; border: 1px solid #E8E8E8; margin-top: 0.5em;"><h4>Nyeste artikler (New articles)</h4><ul>');
+
+	    foreach($xml->item as $item) {
+
+	      $namespaces = $item->getNameSpaces(true);
+	      $dc = $item->children($namespaces['dc']);
+	      
+	      $creator = $dc->creator;
+	      $link = $item->link;
+	      $title = $item->title;
+	      
+	      echo("<li>$creator: <a href=\"$link\">$title</a></li>");
+	      
+	    }
+
+	    echo('</ul></div>');
+	    
+	  }
+	  
+	}
+	
 	// Music
 	if ($record->getField("245") && $record->getField("245")->getSubfield("h") && marctrim($record->getField("245")->getSubfield("h")) == 'lydopptak') {
 	
